@@ -1,0 +1,33 @@
+#image: node:18.19-alpine
+
+#services:
+#  - docker:19.03.13-dind
+
+cache:
+  # Remove key to using cache for all branch
+  # key: ${CI_COMMIT_REF_SLUG}
+  paths:
+    - node_modules/
+
+before_script:
+  - yarn
+
+stages:
+  - linting
+  - build
+
+lint-code:
+  stage: linting
+  script:
+    - yarn run lint
+    - echo "Code has been linted"
+  only:
+    - merge_requests
+
+build:
+  stage: build
+  script:
+    - yarn build
+    - echo "Build successfully"
+  only:
+    - merge_requests
