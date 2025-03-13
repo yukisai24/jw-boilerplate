@@ -10,7 +10,7 @@
 
 ## Using Library
 
--   react-pose
+-   framer-motion
 -   react-query
 -   shadcn/ui
 -   tailwind + cva

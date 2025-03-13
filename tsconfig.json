@@ -16,7 +16,6 @@
     "jsx": "react-jsx",
     "allowJs": true,
 
-
     /* Linting */
     "strict": false,
     "noUnusedLocals": false,
