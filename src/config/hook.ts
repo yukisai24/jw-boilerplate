@@ -1,7 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
-import { SubmitCalculatorSchema } from '@/pages/calculator/types';
-
 import httpClient from '@/config/httpClient';
 
 import { Service } from './Service';
