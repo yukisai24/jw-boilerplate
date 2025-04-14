@@ -1,4 +1,7 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 
 import CryptoPage from './CryptoPage';
 import ETest from './ETest';

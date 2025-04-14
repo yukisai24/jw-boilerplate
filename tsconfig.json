@@ -37,11 +37,11 @@
       "@/styled/*": ["./src/styled/*"],
       "@/theme/*": ["./src/theme/*"],
       "@/types/*": ["./src/types/*"],
-      "@/utils/*": ["./src/utils/*"],
+      "@/utils/*": ["./src/utils/*"]
     },
     "types": ["node"],
-    "typeRoots": ["node_modules/@types", "./src/types"],
+    "typeRoots": ["node_modules/@types", "./src/types"]
   },
   "include": ["src"],
-  "references": [{ "path": "./tsconfig.node.json" }],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

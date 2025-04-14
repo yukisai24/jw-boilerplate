@@ -34,8 +34,10 @@ httpClient.instance.interceptors.request.use((config) => {
   return config;
 });
 
-httpClient.instance.interceptors.response.use((response: AxiosResponse) => {
-  return response;
-});
+httpClient.instance.interceptors.response.use(
+  (response: AxiosResponse) => {
+    return response;
+  },
+);
 
 export default httpClient;

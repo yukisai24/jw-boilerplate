@@ -16,22 +16,27 @@ function ETest() {
   const saveLog = (entry: string) => {
     const newHistory = [...history, entry];
     setHistory(newHistory);
-    localStorage.setItem('emotion-log', JSON.stringify(newHistory));
+    localStorage.setItem(
+      'emotion-log',
+      JSON.stringify(newHistory),
+    );
   };
 
   const handleSubmit = async () => {
-    const res = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${import.meta.env.VITE_OPEN_API_KEY}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-4',
-        messages: [
-          {
-            role: 'system',
-            content: `당신은 감정 루프 분석가이자 감정 시뮬레이션 설계자입니다.
+    const res = await fetch(
+      'https://api.openai.com/v1/chat/completions',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_OPEN_API_KEY}`,
+        },
+        body: JSON.stringify({
+          model: 'gpt-4',
+          messages: [
+            {
+              role: 'system',
+              content: `당신은 감정 루프 분석가이자 감정 시뮬레이션 설계자입니다.
           다음 사용자의 감정 표현을 분석해 아래 JSON 형식으로 응답하세요:
           
           {
@@ -49,27 +54,35 @@ function ETest() {
             "cinema": "이 감정을 영화 한 장면처럼 표현한 묘사",
             "forgiveness": "이 감정을 받아들였을 때 생기는 심리적 회복 흐름"
           }`,
-          },
-          {
-            role: 'user',
-            content: input,
-          },
-        ],
-      }),
-    });
+            },
+            {
+              role: 'user',
+              content: input,
+            },
+          ],
+        }),
+      },
+    );
     console.log(res);
 
     const data = await res.json();
-    const content = data.choices?.[0]?.message?.content || '응답 실패';
+    const content =
+      data.choices?.[0]?.message?.content || '응답 실패';
     setResult(content);
     saveLog(`입력: ${input}\n응답: ${content}`);
-    if (/(고마워|위로됐어|괜찮아|웃기지|정리된 느낌|편해졌어)/.test(input)) {
+    if (
+      /(고마워|위로됐어|괜찮아|웃기지|정리된 느낌|편해졌어)/.test(
+        input,
+      )
+    ) {
       setShowOptions(true);
     }
   };
 
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
+    <div
+      style={{ padding: '2rem', fontFamily: 'sans-serif' }}
+    >
       <h1>감정 시뮬레이션 시스템 (this-model)</h1>
       <textarea
         rows={5}
@@ -82,13 +95,23 @@ function ETest() {
       {result && (
         <div style={{ marginTop: '2rem' }}>
           <h3>GPT 응답</h3>
-          <pre style={{ whiteSpace: 'pre-wrap', background: '#f0f0f0', padding: '1rem' }}>{result}</pre>
+          <pre
+            style={{
+              whiteSpace: 'pre-wrap',
+              background: '#f0f0f0',
+              padding: '1rem',
+            }}
+          >
+            {result}
+          </pre>
         </div>
       )}
       {showOptions && (
         <div style={{ marginTop: '2rem' }}>
           <h4>이 감정을 어떻게 할까요?</h4>
-          <button style={{ marginRight: '1rem' }}>마무리할래</button>
+          <button style={{ marginRight: '1rem' }}>
+            마무리할래
+          </button>
           <button>계속 이어갈래</button>
         </div>
       )}
@@ -98,7 +121,10 @@ function ETest() {
           {history.map((item, idx) => (
             <li
               key={idx}
-              style={{ marginBottom: '1rem', whiteSpace: 'pre-wrap' }}
+              style={{
+                marginBottom: '1rem',
+                whiteSpace: 'pre-wrap',
+              }}
             >
               {item}
             </li>

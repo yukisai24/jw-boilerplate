@@ -31,8 +31,12 @@ export default function CoinList() {
             {coin.name} ({coin.symbol.toUpperCase()})
           </div>
           <div className="text-right">
-            <div>${coin.current_price.toLocaleString()}</div>
-            <div className={`text-sm ${coin.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500'}`}>
+            <div>
+              ${coin.current_price.toLocaleString()}
+            </div>
+            <div
+              className={`text-sm ${coin.price_change_percentage_24h > 0 ? 'text-green-500' : 'text-red-500'}`}
+            >
               {coin.price_change_percentage_24h.toFixed(2)}%
             </div>
           </div>

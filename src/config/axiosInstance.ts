@@ -8,12 +8,21 @@
  * ## SOURCE: https://github.com/acacode/swagger-typescript-api ##
  * ---------------------------------------------------------------
  */
-import type { AxiosInstance, AxiosRequestConfig, HeadersDefaults, ResponseType } from 'axios';
+import type {
+  AxiosInstance,
+  AxiosRequestConfig,
+  HeadersDefaults,
+  ResponseType,
+} from 'axios';
 import axios from 'axios';
 
 export type QueryParamsType = Record<string | number, any>;
 
-export interface FullRequestParams extends Omit<AxiosRequestConfig, 'data' | 'params' | 'url' | 'responseType'> {
+export interface FullRequestParams
+  extends Omit<
+    AxiosRequestConfig,
+    'data' | 'params' | 'url' | 'responseType'
+  > {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -28,12 +37,19 @@ export interface FullRequestParams extends Omit<AxiosRequestConfig, 'data' | 'pa
   body?: unknown;
 }
 
-export type RequestParams = Omit<FullRequestParams, 'body' | 'method' | 'query' | 'path'>;
+export type RequestParams = Omit<
+  FullRequestParams,
+  'body' | 'method' | 'query' | 'path'
+>;
 
-export interface ApiConfig<SecurityDataType = unknown> extends Omit<AxiosRequestConfig, 'data' | 'cancelToken'> {
+export interface ApiConfig<SecurityDataType = unknown>
+  extends Omit<AxiosRequestConfig, 'data' | 'cancelToken'> {
   securityWorker?: (
     securityData: SecurityDataType | null,
-  ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
+  ) =>
+    | Promise<AxiosRequestConfig | void>
+    | AxiosRequestConfig
+    | void;
   secure?: boolean;
   format?: ResponseType;
 }
@@ -52,26 +68,45 @@ export class HttpClient<SecurityDataType = unknown> {
   private secure?: boolean;
   private format?: ResponseType;
 
-  constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'http://192.168.15.175:8002' });
+  constructor({
+    securityWorker,
+    secure,
+    format,
+    ...axiosConfig
+  }: ApiConfig<SecurityDataType> = {}) {
+    this.instance = axios.create({
+      ...axiosConfig,
+      baseURL:
+        axiosConfig.baseURL || 'http://192.168.15.175:8002',
+    });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
   }
 
-  public setSecurityData = (data: SecurityDataType | null) => {
+  public setSecurityData = (
+    data: SecurityDataType | null,
+  ) => {
     this.securityData = data;
   };
 
-  protected mergeRequestParams(params1: AxiosRequestConfig, params2?: AxiosRequestConfig): AxiosRequestConfig {
-    const method = params1.method || (params2 && params2.method);
+  protected mergeRequestParams(
+    params1: AxiosRequestConfig,
+    params2?: AxiosRequestConfig,
+  ): AxiosRequestConfig {
+    const method =
+      params1.method || (params2 && params2.method);
 
     return {
       ...this.instance.defaults,
       ...params1,
       ...(params2 || {}),
       headers: {
-        ...((method && this.instance.defaults.headers[method.toLowerCase() as keyof HeadersDefaults]) || {}),
+        ...((method &&
+          this.instance.defaults.headers[
+            method.toLowerCase() as keyof HeadersDefaults
+          ]) ||
+          {}),
         ...(params1.headers || {}),
         ...((params2 && params2.headers) || {}),
       },
@@ -86,18 +121,31 @@ export class HttpClient<SecurityDataType = unknown> {
     }
   }
 
-  protected createFormData(input: Record<string, unknown>): FormData {
-    return Object.keys(input || {}).reduce((formData, key) => {
-      const property = input[key];
-      const propertyContent: any[] = property instanceof Array ? property : [property];
+  protected createFormData(
+    input: Record<string, unknown>,
+  ): FormData {
+    return Object.keys(input || {}).reduce(
+      (formData, key) => {
+        const property = input[key];
+        const propertyContent: any[] =
+          property instanceof Array ? property : [property];
 
-      for (const formItem of propertyContent) {
-        const isFileType = formItem instanceof Blob || formItem instanceof File;
-        formData.append(key, isFileType ? formItem : this.stringifyFormItem(formItem));
-      }
+        for (const formItem of propertyContent) {
+          const isFileType =
+            formItem instanceof Blob ||
+            formItem instanceof File;
+          formData.append(
+            key,
+            isFileType
+              ? formItem
+              : this.stringifyFormItem(formItem),
+          );
+        }
 
-      return formData;
-    }, new FormData());
+        return formData;
+      },
+      new FormData(),
+    );
   }
 
   public request = async <T = any, _E = any>({
@@ -110,18 +158,36 @@ export class HttpClient<SecurityDataType = unknown> {
     ...params
   }: FullRequestParams): Promise<T> => {
     const secureParams =
-      ((typeof secure === 'boolean' ? secure : this.secure) &&
+      ((typeof secure === 'boolean'
+        ? secure
+        : this.secure) &&
         this.securityWorker &&
         (await this.securityWorker(this.securityData))) ||
       {};
-    const requestParams = this.mergeRequestParams(params, secureParams);
-    const responseFormat = format || this.format || undefined;
+    const requestParams = this.mergeRequestParams(
+      params,
+      secureParams,
+    );
+    const responseFormat =
+      format || this.format || undefined;
 
-    if (type === ContentType.FormData && body && body !== null && typeof body === 'object') {
-      body = this.createFormData(body as Record<string, unknown>);
+    if (
+      type === ContentType.FormData &&
+      body &&
+      body !== null &&
+      typeof body === 'object'
+    ) {
+      body = this.createFormData(
+        body as Record<string, unknown>,
+      );
     }
 
-    if (type === ContentType.Text && body && body !== null && typeof body !== 'string') {
+    if (
+      type === ContentType.Text &&
+      body &&
+      body !== null &&
+      typeof body !== 'string'
+    ) {
       body = JSON.stringify(body);
     }
 
@@ -130,9 +196,12 @@ export class HttpClient<SecurityDataType = unknown> {
         ...requestParams,
         headers: {
           ...(requestParams.headers || {}),
-          ...(type && type !== ContentType.FormData ? { 'Content-Type': type } : {}),
+          ...(type && type !== ContentType.FormData
+            ? { 'Content-Type': type }
+            : {}),
         },
-        params: query?.requestParams || query?.pageQuery || query,
+        params:
+          query?.requestParams || query?.pageQuery || query,
         responseType: responseFormat,
         data: body,
         url: path,
