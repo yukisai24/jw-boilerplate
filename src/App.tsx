@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import ETest from './ETest';
 import TestPage from './TestPage';
 
 const queryClient = new QueryClient({
@@ -14,7 +15,8 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <TestPage />
+      {/* <TestPage /> */}
+      <ETest />
     </QueryClientProvider>
   );
 }
