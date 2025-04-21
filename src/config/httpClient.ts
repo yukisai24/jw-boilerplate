@@ -13,31 +13,29 @@ httpClient.instance.interceptors.request.use((config) => {
   // }
   if (!config.params) return config;
 
-  if (Object.keys(config.params).length) {
-    let newParams = {};
+  //! typescript-swagger-ui 를 통해 api를 생성할 경우 사용
+  // if (Object.keys(config.params).length) {
+  //   let newParams = {};
+  //   Object.values(config.params).forEach((value) => {
+  //     if (typeof value === 'object') {
+  //       newParams = { ...newParams, ...value };
+  //     } else {
+  //       newParams = { ...newParams, value };
+  //     }
+  //   });
 
-    Object.values(config.params).forEach((value) => {
-      if (typeof value === 'object') {
-        newParams = { ...newParams, ...value };
-      } else {
-        newParams = { ...newParams, value };
-      }
-    });
-
-    config.params = newParams;
-    config.paramsSerializer = {
-      ...config.paramsSerializer,
-      indexes: null,
-    };
-  }
+  //   config.params = newParams;
+  //   config.paramsSerializer = {
+  //     ...config.paramsSerializer,
+  //     indexes: null,
+  //   };
+  // }
 
   return config;
 });
 
-httpClient.instance.interceptors.response.use(
-  (response: AxiosResponse) => {
-    return response;
-  },
-);
+httpClient.instance.interceptors.response.use((response: AxiosResponse) => {
+  return response;
+});
 
 export default httpClient;

@@ -19,10 +19,7 @@ import axios from 'axios';
 export type QueryParamsType = Record<string | number, any>;
 
 export interface FullRequestParams
-  extends Omit<
-    AxiosRequestConfig,
-    'data' | 'params' | 'url' | 'responseType'
-  > {
+  extends Omit<AxiosRequestConfig, 'data' | 'params' | 'url' | 'responseType'> {
   /** set parameter to `true` for call `securityWorker` for this request */
   secure?: boolean;
   /** request path */
@@ -46,10 +43,7 @@ export interface ApiConfig<SecurityDataType = unknown>
   extends Omit<AxiosRequestConfig, 'data' | 'cancelToken'> {
   securityWorker?: (
     securityData: SecurityDataType | null,
-  ) =>
-    | Promise<AxiosRequestConfig | void>
-    | AxiosRequestConfig
-    | void;
+  ) => Promise<AxiosRequestConfig | void> | AxiosRequestConfig | void;
   secure?: boolean;
   format?: ResponseType;
 }
@@ -76,17 +70,14 @@ export class HttpClient<SecurityDataType = unknown> {
   }: ApiConfig<SecurityDataType> = {}) {
     this.instance = axios.create({
       ...axiosConfig,
-      baseURL:
-        axiosConfig.baseURL || 'http://192.168.15.175:8002',
+      baseURL: axiosConfig.baseURL || 'http://192.168.15.175:8002',
     });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
   }
 
-  public setSecurityData = (
-    data: SecurityDataType | null,
-  ) => {
+  public setSecurityData = (data: SecurityDataType | null) => {
     this.securityData = data;
   };
 
@@ -94,8 +85,7 @@ export class HttpClient<SecurityDataType = unknown> {
     params1: AxiosRequestConfig,
     params2?: AxiosRequestConfig,
   ): AxiosRequestConfig {
-    const method =
-      params1.method || (params2 && params2.method);
+    const method = params1.method || (params2 && params2.method);
 
     return {
       ...this.instance.defaults,
@@ -121,31 +111,22 @@ export class HttpClient<SecurityDataType = unknown> {
     }
   }
 
-  protected createFormData(
-    input: Record<string, unknown>,
-  ): FormData {
-    return Object.keys(input || {}).reduce(
-      (formData, key) => {
-        const property = input[key];
-        const propertyContent: any[] =
-          property instanceof Array ? property : [property];
+  protected createFormData(input: Record<string, unknown>): FormData {
+    return Object.keys(input || {}).reduce((formData, key) => {
+      const property = input[key];
+      const propertyContent: any[] =
+        property instanceof Array ? property : [property];
 
-        for (const formItem of propertyContent) {
-          const isFileType =
-            formItem instanceof Blob ||
-            formItem instanceof File;
-          formData.append(
-            key,
-            isFileType
-              ? formItem
-              : this.stringifyFormItem(formItem),
-          );
-        }
+      for (const formItem of propertyContent) {
+        const isFileType = formItem instanceof Blob || formItem instanceof File;
+        formData.append(
+          key,
+          isFileType ? formItem : this.stringifyFormItem(formItem),
+        );
+      }
 
-        return formData;
-      },
-      new FormData(),
-    );
+      return formData;
+    }, new FormData());
   }
 
   public request = async <T = any, _E = any>({
@@ -158,18 +139,12 @@ export class HttpClient<SecurityDataType = unknown> {
     ...params
   }: FullRequestParams): Promise<T> => {
     const secureParams =
-      ((typeof secure === 'boolean'
-        ? secure
-        : this.secure) &&
+      ((typeof secure === 'boolean' ? secure : this.secure) &&
         this.securityWorker &&
         (await this.securityWorker(this.securityData))) ||
       {};
-    const requestParams = this.mergeRequestParams(
-      params,
-      secureParams,
-    );
-    const responseFormat =
-      format || this.format || undefined;
+    const requestParams = this.mergeRequestParams(params, secureParams);
+    const responseFormat = format || this.format || undefined;
 
     if (
       type === ContentType.FormData &&
@@ -177,9 +152,7 @@ export class HttpClient<SecurityDataType = unknown> {
       body !== null &&
       typeof body === 'object'
     ) {
-      body = this.createFormData(
-        body as Record<string, unknown>,
-      );
+      body = this.createFormData(body as Record<string, unknown>);
     }
 
     if (
@@ -200,8 +173,7 @@ export class HttpClient<SecurityDataType = unknown> {
             ? { 'Content-Type': type }
             : {}),
         },
-        params:
-          query?.requestParams || query?.pageQuery || query,
+        params: query?.requestParams || query?.pageQuery || query,
         responseType: responseFormat,
         data: body,
         url: path,

@@ -1,9 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
-import {
-  CoinQueryParams,
-  CryptoAPI,
-} from '@/config/CryptoAPI';
+import { CoinQueryParams, CryptoAPI } from '@/config/CryptoAPI';
 import httpClient from '@/config/httpClient';
 
 const Controller = new CryptoAPI(httpClient);
