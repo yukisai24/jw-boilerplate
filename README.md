@@ -15,13 +15,14 @@
 - shadcn/ui
 - tailwind + cva
 - react hook form + zod
+- react-use
 
 ## Setup environment guide
 
 ### Node
 
-- Using command `node -v` to check whether node version and
-  install correct version
+- Using command `node -v` to check whether node version and install correct
+  version
 
 - You can use `nvm` tool for node version management
 
@@ -31,11 +32,9 @@
 
 - Using command `yarn -v` to check whether yarn version
 
-- Upgrade/downgrade yarn to v4
-  `yarn set version 4.7.0 && yarn cache clean`
+- Upgrade/downgrade yarn to v4 `yarn set version 4.7.0 && yarn cache clean`
 
 - Add line .yarnrc.yml >> nodeLinker: node-modules
 
-- After upgrade/downgrade yarn, remove `node_modules`
-  folder, `package-lock.json` (if existed) and then
-  `yarn install`
+- After upgrade/downgrade yarn, remove `node_modules` folder,
+  `package-lock.json` (if existed) and then `yarn install`
