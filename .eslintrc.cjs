@@ -49,10 +49,7 @@ module.exports = {
       },
     ],
     'jsx-a11y/no-access-key': 'error',
-    'jsx-a11y/no-redundant-roles': [
-      'error',
-      { nav: ['navigation'] },
-    ],
+    'jsx-a11y/no-redundant-roles': ['error', { nav: ['navigation'] }],
     'no-empty-function': 'off',
     'no-eval': 'error',
     'no-extend-native': 'error',
@@ -60,20 +57,14 @@ module.exports = {
     'no-inline-styles/no-inline-styles': 2,
     'no-new-func': 'error',
     'no-new-object': 'error',
-    'no-underscore-dangle': [
-      'error',
-      { enforceInMethodNames: true },
-    ],
+    'no-underscore-dangle': ['error', { enforceInMethodNames: true }],
     'prefer-arrow-callback': 'error',
     'prettier/prettier': ['error', { endOfLine: 'auto' }],
     'react/display-name': 'off',
     'react-hooks/exhaustive-deps': 'off',
     'react/jsx-boolean-value': 'error',
     'react/jsx-first-prop-new-line': ['error', 'multiline'],
-    'react/jsx-max-props-per-line': [
-      'error',
-      { maximum: 1 },
-    ],
+    'react/jsx-max-props-per-line': ['error', { maximum: 1 }],
     'react/react-in-jsx-scope': 'off',
     'react/self-closing-comp': 'error',
     'react-refresh/only-export-components': [
@@ -87,7 +78,7 @@ module.exports = {
     'prettier/prettier': [
       'error',
       {
-        printWidth: 120,
+        printWidth: 80,
         tabWidth: 2,
         semi: true,
         singleQuote: true,
@@ -113,11 +104,7 @@ module.exports = {
         importOrderSeparation: true,
         importOrderSortSpecifiers: true,
         importOrderCaseInsensitive: true,
-        importOrderParserPlugins: [
-          'typescript',
-          'jsx',
-          'decorators-legacy',
-        ],
+        importOrderParserPlugins: ['typescript', 'jsx', 'decorators-legacy'],
       },
     ],
   },
