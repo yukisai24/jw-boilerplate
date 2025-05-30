@@ -1,51 +1,56 @@
-import React, { Component, ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 
-import { motion } from 'framer-motion';
+import { Box, Typography } from '@mui/material';
+import { Button } from '@tmax/tds';
 
-interface Props {
-  children: ReactNode;
-}
+import { ErrorBoundaryWrapper } from '@/pages/error-boundary/styled';
 
-interface State {
-  hasError: boolean;
-  error?: Error;
-}
+const ErrorFallback = () => {
+  const [currentDate, setCurrentDate] = useState(10);
 
-export class ErrorBoundary extends Component<Props, State> {
-  state: State = { hasError: false };
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentDate((prev) => prev - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
-  static getDerivedStateFromError(error: Error): State {
-    return { hasError: true, error };
+  if (currentDate === 0) {
+    window.location.reload();
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: 'easeOut' }}
-          className="h-screen flex flex-col items-center justify-center bg-red-50 text-red-800"
+  return (
+    <ErrorBoundaryWrapper>
+      <Typography
+        variant="h6"
+        sx={{
+          marginBottom: 3,
+        }}
+      >
+        Something went wrong
+      </Typography>
+      <Typography
+        sx={{
+          marginBottom: 2,
+        }}
+      >
+        Please click the refresh button
+      </Typography>
+      <Box marginBottom={2}>
+        <Button
+          onClick={() => {
+            window.location.reload();
+          }}
         >
-          <h1 className="text-4xl font-bold mb-4">⚠️ 에러가 발생했습니다</h1>
-          <p className="text-lg text-center max-w-md mb-6">
-            죄송합니다. 예기치 못한 오류가 발생했습니다. 잠시 후 다시 시도해
-            주세요.
-          </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
-          >
-            새로고침
-          </button>
-        </motion.div>
-      );
-    }
+          Refresh
+        </Button>
+      </Box>
+      <Typography>
+        Or you will be automatic refresh in {currentDate > 0 ? currentDate : 0}{' '}
+        second
+      </Typography>
+    </ErrorBoundaryWrapper>
+  );
+};
 
-    return this.props.children;
-  }
-}
+export default ErrorFallback;
