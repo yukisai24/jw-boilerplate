@@ -1,17 +1,37 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { createTheme, ThemeProvider, ToastPopupProvider } from '@tmax/tds';
+
+import theme from '@/theme/index';
 
 import CryptoPage from './CryptoPage';
 import ETest from './ETest';
 import LoginForm from './LoginForm';
+import { ErrorBoundary } from './pages/error-boundary';
 import TestPage from './TestPage';
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false,
+      retry: 0,
+    },
+  },
+});
 function App() {
   return (
     <>
-      {/* <TestPage /> */}
-      {/* <ETest /> */}
-      {/* <LoginForm /> */}
-      <CryptoPage />
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={theme}>
+          <ToastPopupProvider>
+            {/* <TestPage /> */}
+            {/* <ETest /> */}
+            {/* <LoginForm /> */}
+            <ErrorBoundary>
+              <CryptoPage />
+            </ErrorBoundary>
+          </ToastPopupProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </>
   );
 }

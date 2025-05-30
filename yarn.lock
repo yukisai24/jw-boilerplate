@@ -1124,7 +1124,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@monaco-editor/react@npm:^4.6.0":
+"@monaco-editor/react@npm:^4.7.0":
   version: 4.7.0
   resolution: "@monaco-editor/react@npm:4.7.0"
   dependencies:
@@ -2372,12 +2372,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tmax/tds@npm:^0.0.0":
-  version: 0.0.0
-  resolution: "@tmax/tds@npm:0.0.0"
+"@tmax/tds@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "@tmax/tds@npm:0.1.0"
   dependencies:
     "@floating-ui/react-dom": "npm:^2.1.2"
-    "@monaco-editor/react": "npm:^4.6.0"
+    "@monaco-editor/react": "npm:^4.7.0"
     "@mui/lab": "npm:5.0.0-alpha.163"
     "@mui/x-data-grid": "npm:^7.3.2"
     "@mui/x-date-pickers": "npm:^6.19.3"
@@ -2392,7 +2392,7 @@ __metadata:
     i18next-browser-languagedetector: "npm:^7.2.0"
     lodash: "npm:^4.17.21"
     lottie-react: "npm:^2.4.0"
-    monaco-editor: "npm:^0.46.0"
+    monaco-editor: "npm:^0.52.2"
     notistack: "npm:^3.0.1"
     prismjs: "npm:^1.29.0"
     react-colorful: "npm:^5.6.1"
@@ -2409,7 +2409,7 @@ __metadata:
     "@types/react-dom": ^18.0.0 || ^19.0.0
     react: ^18.0.0 || ^19.0.0
     react-dom: ^18.0.0 || ^19.0.0
-  checksum: 10c0/41d5f6a39aa70b7fe6cc5c7db802e06f7e8d82e9d85a328db8b010d39acb13a3b05373717f227b57c6e6a49cd1823bfe84b533d12a8be3a32ce068ee2013a3c3
+  checksum: 10c0/d7a25e863b78e0ec55e759e3a396cca18e1f572ebe19cb42aa6dcf419ad49a6eda5c31c1f00c262e0732b35be561d512a339bbe79bc8334f2c31977872d0e27a
   languageName: node
   linkType: hard
 
@@ -5267,7 +5267,7 @@ __metadata:
     "@tailwindcss/postcss": "npm:^4.0.13"
     "@tailwindcss/vite": "npm:^4.0.13"
     "@tanstack/react-query": "npm:^5.67.3"
-    "@tmax/tds": "npm:^0.0.0"
+    "@tmax/tds": "npm:^0.1.0"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.2"
     "@types/eslint-plugin-jsx-a11y": "npm:^6"
     "@types/node": "npm:^22.13.10"
@@ -5293,6 +5293,7 @@ __metadata:
     prettier: "npm:^3.5.3"
     react: "npm:^19.0.0"
     react-dom: "npm:^19.0.0"
+    react-error-boundary: "npm:^6.0.0"
     react-hook-form: "npm:^7.54.2"
     react-i18next: "npm:^15.5.2"
     react-router-dom: "npm:^7.3.0"
@@ -5818,10 +5819,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"monaco-editor@npm:^0.46.0":
-  version: 0.46.0
-  resolution: "monaco-editor@npm:0.46.0"
-  checksum: 10c0/1a465a8bc1545b8ef43160d69d013dbfb263cb3f88d8361c738791f3d74b9182529486d7fc585bbae0c73c36d5af9cf6af92fd97d5833325f6ed4cadc267e3ec
+"monaco-editor@npm:^0.52.2":
+  version: 0.52.2
+  resolution: "monaco-editor@npm:0.52.2"
+  checksum: 10c0/5a92da64f1e2ab375c0ce99364137f794d057c97bed10ecc65a08d6e6846804b8ecbd377eacf01e498f7dfbe1b21e8be64f728256681448f0484df90e767b435
   languageName: node
   linkType: hard
 
@@ -6450,6 +6451,17 @@ __metadata:
   peerDependencies:
     react: ">= 16.8 || 18.0.0"
   checksum: 10c0/e17b1832783cda7b8824fe9370e99185d1abbdd5e4980b2985d6321c5768c8de18ff7b9ad550c809ee9743269dea608ff74d5208062754ce8377ad022897b278
+  languageName: node
+  linkType: hard
+
+"react-error-boundary@npm:^6.0.0":
+  version: 6.0.0
+  resolution: "react-error-boundary@npm:6.0.0"
+  dependencies:
+    "@babel/runtime": "npm:^7.12.5"
+  peerDependencies:
+    react: ">=16.13.1"
+  checksum: 10c0/1914d600dee95a14f14af4afe9867b0d35c26c4f7826d23208800ba2a99728659029aad60a6ef95e13430b4d79c2c4c9b3585f50bf508450478760d2e4e732d8
   languageName: node
   linkType: hard
 
