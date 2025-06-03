@@ -38,3 +38,7 @@
 
 - After upgrade/downgrade yarn, remove `node_modules` folder,
   `package-lock.json` (if existed) and then `yarn install`
+
+## Follow commit msg convention
+
+- gitmessages.txt

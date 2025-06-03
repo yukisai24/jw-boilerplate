@@ -6,6 +6,7 @@ import { Box, Typography } from '@mui/material';
 import { Button } from '@tmax/tds';
 import { AnimatePresence, motion } from 'framer-motion';
 
+import { ConditionalRender } from '@/components/ui/common/ConditionalRender';
 import { PageTransition } from '@/components/ui/common/PageTransition';
 
 import { ErrorBoundaryWrapper } from '@/pages/error-boundary/styled';
@@ -66,12 +67,12 @@ const ErrorFallback = ({
           Something went wrong
         </Typography>
         <p className="text-gray-700 text-lg mb-6">{t('error.generic')}</p>
-        {isDevMode && (
+        <ConditionalRender condition={isDevMode}>
           <div className="bg-red-100 border border-red-300 text-left text-sm text-red-800 p-4 mb-6  w-full rounded-lg overflow-auto">
             <pre>{error.message}</pre>
             <pre className="whitespace-pre-wrap">{error.stack}</pre>
           </div>
-        )}
+        </ConditionalRender>
         <div className="flex gap-4">
           <button
             onClick={resetErrorBoundary}
