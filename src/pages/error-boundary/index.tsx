@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 
 import { Box, Typography } from '@mui/material';
@@ -18,6 +19,7 @@ const ErrorFallback = ({
   error: Error;
   resetErrorBoundary: () => void;
 }) => {
+  const { t } = useTranslation();
   const [currentDate, setCurrentDate] = useState(10);
 
   useEffect(() => {
@@ -63,15 +65,13 @@ const ErrorFallback = ({
         >
           Something went wrong
         </Typography>
-        <p className="text-gray-700 text-lg mb-6">
-          문제가 발생했습니다. 다시 시도해주세요.
-        </p>
-        {/* {isDevMode && (
-          <div className="bg-red-100 border border-red-300 text-left text-sm text-red-800 p-4 mb-6 max-w-xl w-full rounded-lg overflow-auto">
+        <p className="text-gray-700 text-lg mb-6">{t('error.generic')}</p>
+        {isDevMode && (
+          <div className="bg-red-100 border border-red-300 text-left text-sm text-red-800 p-4 mb-6  w-full rounded-lg overflow-auto">
             <pre>{error.message}</pre>
             <pre className="whitespace-pre-wrap">{error.stack}</pre>
           </div>
-        )} */}
+        )}
         <div className="flex gap-4">
           <button
             onClick={resetErrorBoundary}
