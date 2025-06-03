@@ -13,6 +13,7 @@ import CryptoPage from './CryptoPage';
 import ETest from './ETest';
 import LoginForm from './LoginForm';
 import ErrorFallback from './pages/error-boundary';
+import AppRoutes from './routes/AppRouter';
 import TestPage from './TestPage';
 
 const queryClient = new QueryClient({
@@ -41,13 +42,7 @@ function App() {
           >
             <ThemeProvider theme={theme}>
               <ToastPopupProvider>
-                <ErrorBoundary
-                  fallbackRender={({ error, resetErrorBoundary }) => (
-                    <ErrorFallback />
-                  )}
-                >
-                  <CryptoPage />
-                </ErrorBoundary>
+                <AppRoutes />
               </ToastPopupProvider>
             </ThemeProvider>
           </LocalizationProvider>
