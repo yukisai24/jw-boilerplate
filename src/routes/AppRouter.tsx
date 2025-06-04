@@ -16,30 +16,34 @@ import { generateRoute } from '@/utils/routes';
 
 import CryptoPage from '@/CryptoPage';
 
+import ScrollManager from './ScrollManager';
+
 const AppRoutes = () => {
   return (
     <Router>
       <ErrorBoundary fallbackRender={(props) => <ErrorFallback {...props} />}>
-        <Routes>
-          <Route
-            path="/"
-            element={<Navigate to={paths.index} />}
-          />
-          {/* <Route element={<ProtectedLayout />}>
+        <ScrollManager>
+          <Routes>
+            <Route
+              path="/"
+              element={<Navigate to={paths.index} />}
+            />
+            {/* <Route element={<ProtectedLayout />}>
             {generateRoute(ProtectedRoutes)}
-          </Route> */}
+            </Route> */}
 
-          {/* {generateRoute(publicRoutes)} */}
+            {/* {generateRoute(publicRoutes)} */}
 
-          <Route
-            path={'/cr'}
-            element={<CryptoPage />}
-          />
-          <Route
-            path={'*'}
-            element={<PageNotFound />}
-          />
-        </Routes>
+            <Route
+              path={'/cr'}
+              element={<CryptoPage />}
+            />
+            <Route
+              path={'*'}
+              element={<PageNotFound />}
+            />
+          </Routes>
+        </ScrollManager>
       </ErrorBoundary>
     </Router>
   );
