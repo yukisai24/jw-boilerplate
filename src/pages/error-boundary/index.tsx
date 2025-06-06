@@ -15,6 +15,8 @@ import { Spacer } from '@/components/ui/common/Spacer';
 
 import { ErrorBoundaryWrapper } from '@/pages/error-boundary/styled';
 
+import { isDevMode } from '@/utils/env';
+
 const ErrorFallback = ({
   error,
   resetErrorBoundary,
@@ -33,7 +35,7 @@ const ErrorFallback = ({
   }, []);
 
   if (currentDate === 0) {
-    window.location.reload();
+    !isDevMode && window.location.reload();
   }
 
   return (
@@ -42,21 +44,18 @@ const ErrorFallback = ({
         <Typography variant="h6">{t('error.generic')}</Typography>
         <Typography>Please click the refresh button</Typography>
         <Spacer y={'md'} />
-        <Box>
-          <Button
-            onClick={() => {
-              window.location.reload();
-            }}
-          >
-            Refresh
-          </Button>
-        </Box>
+        <Button
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Refresh
+        </Button>
         <Spacer y={'md'} />
         <Typography>
           Or you will be automatic refresh in{' '}
           {currentDate > 0 ? currentDate : 0} second
         </Typography>
-
         <DevRender>
           <Spacer y={'md'} />
           <div className="bg-red-100 border border-red-300 text-left text-sm text-red-800 p-4 mb-6 rounded-lg overflow-auto">

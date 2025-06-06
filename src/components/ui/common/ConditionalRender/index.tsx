@@ -12,11 +12,21 @@ export const ConditionalRender = ({
   return condition ? <>{children}</> : null;
 };
 
-export const DevRender = ({ children }: { children: React.ReactNode }) => {
-  return isDevMode ? (
-    <div className="border border-gray-800 text-left text-sm p-4 mt-6 mb-6 rounded-lg">
-      <Typography variant="h6">Dev Render</Typography>
+export const DevRender = ({
+  children,
+  isDev = true,
+}: {
+  children: React.ReactNode;
+  isDev?: boolean;
+}) => {
+  const isVisible = isDev ? isDevMode : !isDevMode;
+
+  if (!isVisible) return null;
+
+  return (
+    <div className="border border-gray-800 text-sm p-4 mt-6 mb-6 rounded-lg">
+      <Typography variant="h6">🔧 Dev Render</Typography>
       {children}
     </div>
-  ) : null;
+  );
 };
