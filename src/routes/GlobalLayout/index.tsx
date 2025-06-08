@@ -3,9 +3,6 @@ import { Outlet, useNavigate } from 'react-router-dom';
 
 import { Stack } from '@mui/material';
 
-import Footer from '@/components/organisms/footer';
-import MainNavBar from '@/components/organisms/mainNavBar';
-
 import { useAuth } from '@/hooks/useAuth';
 import { paths } from '@/routes/paths';
 import { MainLayoutContainer } from '@/styled/layout';
