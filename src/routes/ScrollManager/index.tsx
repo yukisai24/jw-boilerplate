@@ -1,5 +1,7 @@
-import { PropsWithChildren, useEffect } from 'react';
-import { ScrollRestoration, useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLocation } from 'react-router-dom';
+
+import { PageTransition } from '@/components/ui/common/PageTransition';
 
 // 페이지 이동 시 스크롤 최상단 이동
 const ScrollToTop = () => {
@@ -31,13 +33,14 @@ const HashScroll = () => {
 };
 
 // 통합 ScrollManager 컴포넌트
-const ScrollManager = ({ children }: PropsWithChildren) => {
+const ScrollManager = () => {
   return (
     <>
-      <ScrollRestoration />
       <ScrollToTop />
       <HashScroll />
-      {children}
+      <PageTransition>
+        <Outlet />
+      </PageTransition>
     </>
   );
 };

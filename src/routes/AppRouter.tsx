@@ -12,18 +12,18 @@ import PageNotFound from '@/pages/pageNotFound';
 // import AuthenticateLayout from '@/routes/guards/AuthenticateLayout';
 import { paths } from '@/routes/paths';
 import ProtectedLayout from '@/routes/ProtectedLayout';
-import { generateRoute } from '@/utils/routes';
+import { autoRoutes, generateRoute } from '@/utils/routes';
 
-import CryptoPage from '@/CryptoPage';
-
+import { CryptoPage } from './lazyLoadComponoents';
 import ScrollManager from './ScrollManager';
 
 const AppRoutes = () => {
+  console.log(autoRoutes);
   return (
     <Router>
       <ErrorBoundary fallbackRender={(props) => <ErrorFallback {...props} />}>
-        <ScrollManager>
-          <Routes>
+        <Routes>
+          <Route element={<ScrollManager />}>
             <Route
               path="/"
               element={<Navigate to={paths.index} />}
@@ -31,9 +31,7 @@ const AppRoutes = () => {
             {/* <Route element={<ProtectedLayout />}>
             {generateRoute(ProtectedRoutes)}
             </Route> */}
-
             {/* {generateRoute(publicRoutes)} */}
-
             <Route
               path={'/cr'}
               element={<CryptoPage />}
@@ -42,8 +40,8 @@ const AppRoutes = () => {
               path={'*'}
               element={<PageNotFound />}
             />
-          </Routes>
-        </ScrollManager>
+          </Route>
+        </Routes>
       </ErrorBoundary>
     </Router>
   );

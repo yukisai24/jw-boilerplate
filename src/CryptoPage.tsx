@@ -49,7 +49,7 @@ export default function CoinList() {
             value={currency}
             onChange={(e) => setCurrency(e.target.value)}
           >
-            <option valuㄴe="uㄴsd">USD ($)</option>
+            <option value="uㄴsd">USD ($)</option>
             <option value="krw">KRW (₩)</option>
             <option value="eur">EUR (€)</option>
           </select>

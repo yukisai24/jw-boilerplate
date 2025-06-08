@@ -9,4 +9,5 @@ export interface ICurrentUser {
   email?: string;
   role: EUserRole;
   phone?: string;
+  shouldChangePassword: boolean;
 }

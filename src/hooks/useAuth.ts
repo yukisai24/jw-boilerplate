@@ -1,23 +1,39 @@
 // 📁 src/hooks/useAuth.ts (Zustand 기반)
 import { create } from 'zustand';
+
 import { ICurrentUser } from '@/types/user';
 
 interface AuthState {
   authenticated: boolean;
-  login: () => void;
-  logout: () => void;
   currentUser: ICurrentUser | null;
+  shouldChangePassword: boolean;
+  login: (user: ICurrentUser) => void;
+  logout: () => void;
 }
 
 export const useAuth = create<AuthState>((set) => ({
   authenticated: !!localStorage.getItem('token'),
-  login: () => {
+  currentUser: JSON.parse(localStorage.getItem('user') || 'null'),
+  shouldChangePassword:
+    JSON.parse(localStorage.getItem('user') || 'null')?.shouldChangePassword ||
+    false,
+  login: (user) => {
     localStorage.setItem('token', 'fake-token');
-    set({ authenticated: true });
+    localStorage.setItem('user', JSON.stringify(user));
+    set({
+      authenticated: true,
+      currentUser: user,
+      shouldChangePassword: user.shouldChangePassword,
+    });
   },
+
   logout: () => {
     localStorage.removeItem('token');
-    set({ authenticated: false });
+    localStorage.removeItem('user');
+    set({
+      authenticated: false,
+      currentUser: null,
+      shouldChangePassword: false,
+    });
   },
-  currentUser
 }));
