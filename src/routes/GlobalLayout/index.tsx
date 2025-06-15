@@ -9,6 +9,7 @@ import { MainLayoutContainer } from '@/styled/layout';
 import { EUserRole } from '@/types/user';
 
 import ScrollToTop from '../scrollToTop';
+import MainNavBar from './MainNavBar';
 
 interface IGlobalLayout {
   acceptedRole?: EUserRole[];
@@ -30,10 +31,7 @@ const GlobalLayout = ({ acceptedRole }: IGlobalLayout) => {
 
   return (
     <ScrollToTop>
-      <MainNavBar
-        isShowSearchBox={isShowSearchBox}
-        setIsShowSearchBox={setIsShowSearchBox}
-      />
+      <MainNavBar />
       <MainLayoutContainer
         bgcolor={({ palette }) => palette.neutralLight[25]}
         onClick={() => setIsShowSearchBox(false)}
@@ -46,7 +44,7 @@ const GlobalLayout = ({ acceptedRole }: IGlobalLayout) => {
           <Outlet />
         </Stack>
       </MainLayoutContainer>
-      <Footer onClick={() => setIsShowSearchBox(false)} />
+      {/* <Footer onClick={() => setIsShowSearchBox(false)} /> */}
     </ScrollToTop>
   );
 };

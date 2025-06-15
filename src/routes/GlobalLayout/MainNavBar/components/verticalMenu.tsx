@@ -1,15 +1,22 @@
 import { Dispatch, Fragment, SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Box, Collapse, Typography } from '@mui/material';
+import { Box, Collapse, MenuItem, styled, Typography } from '@mui/material';
 
-import { menus } from '@/components/organisms/mainNavBar/menus';
-import { StyledVerticalMenuItem } from '@/components/organisms/mainNavBar/styled';
-import { TMenu } from '@/components/organisms/mainNavBar/types';
-
-import { CollapseIcon } from '@/assets/icons';
 import { useAuth } from '@/hooks/useAuth';
 import { EUserRole } from '@/types/user';
+import { TMenu } from '../types';
+import { menus } from '../menus';
+
+const StyledVerticalMenuItem = styled(MenuItem)(({ theme }) => ({
+  width: '100%',
+  height: '50px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: theme.spacing(3),
+  padding: 0,
+}));
 
 const VerticalMenu = ({
   isDisplay,
@@ -59,7 +66,8 @@ const VerticalMenu = ({
               justifyContent="center"
               alignContent="flex-end"
             >
-              <CollapseIcon />
+              {/* <CollapseIcon /> */}
+              >
             </Box>
           )}
         </StyledVerticalMenuItem>
@@ -73,7 +81,9 @@ const VerticalMenu = ({
               return (
                 <StyledVerticalMenuItem
                   key={childMenu.id}
-                  onClick={() => onClickMenuItem(menu.path + '/' + childMenu.path)}
+                  onClick={() =>
+                    onClickMenuItem(menu.path + '/' + childMenu.path)
+                  }
                 >
                   <Typography
                     key={childMenu.id}
@@ -101,11 +111,19 @@ const VerticalMenu = ({
             return renderMenu(menu, idx);
           }
 
-          if (menu.acceptedRole?.length && !currentUser?.role && menu.acceptedRole?.includes(EUserRole.GUEST)) {
+          if (
+            menu.acceptedRole?.length &&
+            !currentUser?.role &&
+            menu.acceptedRole?.includes(EUserRole.GUEST)
+          ) {
             return renderMenu(menu, idx);
           }
 
-          if (menu.acceptedRole?.length && currentUser?.role && menu.acceptedRole?.includes(currentUser?.role)) {
+          if (
+            menu.acceptedRole?.length &&
+            currentUser?.role &&
+            menu.acceptedRole?.includes(currentUser?.role)
+          ) {
             return renderMenu(menu, idx);
           }
 

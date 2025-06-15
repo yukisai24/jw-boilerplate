@@ -1,54 +1,53 @@
-import { Fragment } from 'react';
+import { Fragment, ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 
 import { Box, Typography } from '@mui/material';
 
-import { menus } from '@/components/organisms/mainNavBar/menus';
-import { StyledHorizontalMenuItem } from '@/components/organisms/mainNavBar/styled';
-import { TMenu } from '@/components/organisms/mainNavBar/types';
-
 import { useAuth } from '@/hooks/useAuth';
 import { EUserRole } from '@/types/user';
+
+import { menus } from '../menus';
+
+type TMenu = {
+  path: string;
+  label: string;
+  icon?: ReactNode;
+  child?: TMenu[];
+  id: string;
+  acceptedRole?: EUserRole[];
+};
 
 const HorizontalMenu = ({ color = 'black' }: { color?: 'black' | 'white' }) => {
   const { currentUser } = useAuth();
 
-  // Comment in case need to revert using the dropdown menu
-  // This is component's props
-  //   {
-  //   menuDisplayStatus,
-  //   setMenuDisplayStatus,
-  // }: {
-  //   menuDisplayStatus?: TMenuDisplayStatus;
-  //   setMenuDisplayStatus: Dispatch<SetStateAction<TMenuDisplayStatus | undefined>>;
-  // }
-
-  // const navigate = useNavigate();
-  // const location = useLocation();
-
-  // const handleNavigate = (path?: string) => {
-  //   if (path) {
-  //     navigate('/' + path);
-  //   }
-  // };
-
   const renderMenu = (menu: TMenu) => {
     return (
-      <StyledHorizontalMenuItem key={menu.id}>
+      <Box
+        key={menu.id}
+        style={{
+          minWidth: '120px',
+          textWrap: 'wrap',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
         <NavLink to={`/${menu.path}`}>
           {({ isActive }) => (
             <Typography
-              color={({ palette }) =>
-                isActive
+              sx={({ palette }) => ({
+                color: isActive
                   ? palette.text.brandPrimary
                   : color === 'black'
                     ? palette.text.primary
-                    : palette.neutralLight[0]
-              }
-              sx={({ palette }) => ({
+                    : palette.neutralLight[0],
                 '&:hover': {
-                  color: color === 'black' ? palette.text.brandPrimary : undefined,
-                  borderBottom: color === 'white' ? `1px solid ${palette.neutralLight[0]}` : undefined,
+                  color:
+                    color === 'black' ? palette.text.brandPrimary : undefined,
+                  borderBottom:
+                    color === 'white'
+                      ? `1px solid ${palette.neutralLight[0]}`
+                      : undefined,
                 },
               })}
               variant="service_bodyB"
@@ -57,7 +56,7 @@ const HorizontalMenu = ({ color = 'black' }: { color?: 'black' | 'white' }) => {
             </Typography>
           )}
         </NavLink>
-      </StyledHorizontalMenuItem>
+      </Box>
     );
   };
 
@@ -74,73 +73,24 @@ const HorizontalMenu = ({ color = 'black' }: { color?: 'black' | 'white' }) => {
           return renderMenu(menu);
         }
 
-        if (menu.acceptedRole?.length && !currentUser?.role && menu.acceptedRole?.includes(EUserRole.GUEST)) {
+        if (
+          menu.acceptedRole?.length &&
+          !currentUser?.role &&
+          menu.acceptedRole?.includes(EUserRole.GUEST)
+        ) {
           return renderMenu(menu);
         }
 
-        if (menu.acceptedRole?.length && currentUser?.role && menu.acceptedRole?.includes(currentUser?.role)) {
+        if (
+          menu.acceptedRole?.length &&
+          currentUser?.role &&
+          menu.acceptedRole?.includes(currentUser?.role)
+        ) {
           return renderMenu(menu);
         }
 
         return <Fragment key={menu.id} />;
       })}
-
-      {/* Comment in case need to revert using the dropdown menu */}
-      {/* {menus.map((menu, idx) => {
-        const isFocus = location.pathname.split('/')[1].includes(menu.path);
-
-        return (
-          <MenuTooltip
-            placement="bottom-start"
-            key={menu.id}
-            title={
-              !menuDisplayStatus?.[menu.id] ? (
-                <Box>
-                  {menu?.child?.map((child) => {
-                    return (
-                      <StyledHorizontalMenuItem
-                        onClick={() => {
-                          handleNavigate(menu.path + '/' + child.path);
-                          setMenuDisplayStatus((prev) => ({
-                            ...prev,
-                            [menu.id]: true,
-                          }));
-                        }}
-                        key={child.id}
-                      >
-                        <Typography variant="service_body1">{child.label}</Typography>
-                      </StyledHorizontalMenuItem>
-                    );
-                  })}
-                </Box>
-              ) : null
-            }
-            disableHoverListener={menuDisplayStatus?.[menu.id] || !menu?.child?.length}
-          >
-            <MenuItem
-              onClick={() => handleNavigate(menu.path)}
-              id={`composition-button-${idx}`}
-              onMouseEnter={() => {
-                setMenuDisplayStatus((prev) => ({
-                  ...prev,
-                  [menu.id]: false,
-                }));
-              }}
-              sx={{ padding: 0 }}
-            >
-              <Typography
-                aria-haspopup="true"
-                minWidth="120px"
-                textAlign="center"
-                color={({ palette }) => (isFocus ? palette?.text.brandPrimary : palette.text.primary)}
-                variant="service_bodyB"
-              >
-                {menu.label}
-              </Typography>
-            </MenuItem>
-          </MenuTooltip>
-        );
-      })} */}
     </Box>
   );
 };

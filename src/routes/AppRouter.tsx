@@ -14,7 +14,9 @@ import { paths } from '@/routes/paths';
 import ProtectedLayout from '@/routes/ProtectedLayout';
 import { autoRoutes, generateRoute } from '@/utils/routes';
 
+import AuthenticateLayout from './AuthenticateLayout';
 import { CryptoPage } from './lazyLoadComponoents';
+import { authenticateRoutes, protectedRoutes, publicRoutes } from './routes';
 import ScrollManager from './ScrollManager';
 
 const AppRoutes = () => {
@@ -28,10 +30,17 @@ const AppRoutes = () => {
               path="/"
               element={<Navigate to={paths.index} />}
             />
-            {/* <Route element={<ProtectedLayout />}>
-            {generateRoute(ProtectedRoutes)}
-            </Route> */}
-            {/* {generateRoute(publicRoutes)} */}
+
+            <Route element={<AuthenticateLayout />}>
+              {generateRoute(authenticateRoutes)}
+            </Route>
+
+            <Route element={<ProtectedLayout />}>
+              {generateRoute(protectedRoutes)}
+            </Route>
+
+            {generateRoute(publicRoutes)}
+
             <Route
               path={'/cr'}
               element={<CryptoPage />}
