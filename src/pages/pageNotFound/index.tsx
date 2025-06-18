@@ -1,7 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 
 import { Stack, Typography } from '@mui/material';
-import { Button } from '@tmax/tds';
+import { Button, Icon } from '@tmax/tds';
+
+import { PageTransition } from '@/components/ui/common/PageTransition';
 
 import { PageNotFoundContainer } from '@/pages/pageNotFound/styled';
 
@@ -16,28 +18,24 @@ const PageNotFound = () => {
   };
 
   return (
-    <PageNotFoundContainer>
-      <Stack
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        height="100%"
-        spacing={2}
-      >
-        <Typography
-          variant="h1"
-          fontSize={'64px'}
-          fontWeight={theme.typography.fontWeightBold}
+    <PageTransition>
+      <PageNotFoundContainer>
+        <Stack
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
+          height="100%"
+          spacing={7}
         >
-          404
-        </Typography>
+          <Icon name="tm_404_error" />
 
-        <Button onClick={navigateToHomePage}>Go back</Button>
-      </Stack>
-      <Stack justifyContent="center">
-        Copyrightⓒ 2023. TmaxSoft, All Rights Reserved.
-      </Stack>
-    </PageNotFoundContainer>
+          <Button onClick={navigateToHomePage}>Go back</Button>
+        </Stack>
+        <Stack justifyContent="center">
+          Copyrightⓒ 2023. TmaxSoft, All Rights Reserved.
+        </Stack>
+      </PageNotFoundContainer>
+    </PageTransition>
   );
 };
 

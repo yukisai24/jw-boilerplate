@@ -122,18 +122,19 @@ const MainNavBar = () => {
                     gap={4}
                   >
                     <Button
-                      label="로그인"
                       onClick={handleLogIn}
                       size="medium"
                       variant={'outlined'}
-                    />
-
+                    >
+                      로그인
+                    </Button>
                     <Button
-                      label="가입하기"
                       onClick={handleSignUp}
                       variant={'outlined'}
                       size="medium"
-                    />
+                    >
+                      가입하기
+                    </Button>
                   </Box>
                 </>
               </HeaderToolbar>
@@ -146,7 +147,7 @@ const MainNavBar = () => {
         </Stack>
 
         <VerticalMenu
-          isDisplay={false}
+          isDisplay={true}
           setIsDisplay={() => {}}
         />
       </StyledAppBar>

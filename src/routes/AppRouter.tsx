@@ -20,7 +20,6 @@ import { authenticateRoutes, protectedRoutes, publicRoutes } from './routes';
 import ScrollManager from './ScrollManager';
 
 const AppRoutes = () => {
-  console.log(autoRoutes);
   return (
     <Router>
       <ErrorBoundary fallbackRender={(props) => <ErrorFallback {...props} />}>
