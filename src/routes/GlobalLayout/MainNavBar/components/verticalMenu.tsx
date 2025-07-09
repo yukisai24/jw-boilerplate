@@ -2,11 +2,13 @@ import { Dispatch, Fragment, SetStateAction, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { Box, Collapse, MenuItem, styled, Typography } from '@mui/material';
+import { Icon } from '@tmax/tds';
 
 import { useAuth } from '@/hooks/useAuth';
 import { EUserRole } from '@/types/user';
-import { TMenu } from '../types';
+
 import { menus } from '../menus';
+import { TMenu } from '../types';
 
 const StyledVerticalMenuItem = styled(MenuItem)(({ theme }) => ({
   width: '100%',
@@ -67,7 +69,7 @@ const VerticalMenu = ({
               alignContent="flex-end"
             >
               {/* <CollapseIcon /> */}
-              >
+              <Icon name="tm_arrow_card_open" />
             </Box>
           )}
         </StyledVerticalMenuItem>
