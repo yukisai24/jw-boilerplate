@@ -12,6 +12,23 @@ export const paths = {
     resetPassword: '/reset-password',
     editInformation: '/account-management',
   },
+  license: {
+    dashboard: '/license/dashboard',
+    subscription: '/license/subscription',
+    billing: '/license/billing',
+    usage: '/license/usage',
+    upgrade: '/license/upgrade',
+    management: '/license/management',
+    history: '/license/history',
+    features: '/license/features',
+  },
+  admin: {
+    dashboard: '/admin/dashboard',
+    users: '/admin/users',
+    licenses: '/admin/licenses',
+    settings: '/admin/settings',
+    analytics: '/admin/analytics',
+  },
   api: {
     index: '/api',
     detail: ':id',

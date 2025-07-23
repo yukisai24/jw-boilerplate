@@ -13,19 +13,25 @@ import MainNavBar from './MainNavBar';
 
 interface IGlobalLayout {
   acceptedRole?: EUserRole[];
+  requireAuth?: boolean; // 인증이 필요한지 여부
 }
 
-const GlobalLayout = ({ acceptedRole }: IGlobalLayout) => {
-  const { currentUser } = useAuth();
+const GlobalLayout = ({ acceptedRole, requireAuth = false }: IGlobalLayout) => {
+  const { currentUser, authenticated } = useAuth();
   const navigate = useNavigate();
   const [isShowSearchBox, setIsShowSearchBox] = useState(false);
 
-  if (acceptedRole?.length) {
-    if (
-      !acceptedRole?.includes(EUserRole.GUEST) &&
-      (!currentUser?.role || !acceptedRole?.includes(currentUser.role))
-    ) {
+  // 인증이 필요한 경우 체크
+  if (requireAuth && !authenticated) {
+    navigate(paths.auth.logIn, { replace: true });
+    return null;
+  }
+
+  // 특정 권한이 필요한 경우 체크
+  if (acceptedRole?.length && authenticated) {
+    if (!currentUser?.role || !acceptedRole?.includes(currentUser.role)) {
       navigate(paths.pageNotFound, { replace: true });
+      return null;
     }
   }
 
