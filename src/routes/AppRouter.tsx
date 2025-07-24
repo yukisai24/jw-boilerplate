@@ -9,25 +9,13 @@ import {
 import ErrorFallback from '@/pages/error-boundary';
 import PageNotFound from '@/pages/pageNotFound';
 
-// import AuthenticateLayout from '@/routes/guards/AuthenticateLayout';
 import { paths } from '@/routes/paths';
-import ProtectedLayout from '@/routes/ProtectedLayout';
-import { ELicenseStatus, ELicenseType, EUserRole } from '@/types/user';
-import { autoRoutes, generateRoute } from '@/utils/routes';
+import { generateRoute } from '@/utils/routes';
 
-import AuthenticateLayout from './AuthenticateLayout';
 import { CryptoPage } from './lazyLoadComponoents';
-import LicenseProtectedLayout from './LicenseProtectedLayout';
-import {
-  adminRoutes,
-  authenticateRoutes,
-  licenseRoutes,
-  premiumRoutes,
-  protectedRoutes,
-  publicRoutes,
-} from './routes';
+import { unifiedRoutes } from './routes';
 import ScrollManager from './ScrollManager';
-import UnifiedProtectedLayout from './UnifiedProtectedLayout';
+import SmartLayout from './SmartLayout';
 
 const AppRoutes = () => {
   return (
@@ -35,80 +23,18 @@ const AppRoutes = () => {
       <ErrorBoundary fallbackRender={(props) => <ErrorFallback {...props} />}>
         <Routes>
           <Route element={<ScrollManager />}>
+            {/* 루트 경로 리다이렉트 */}
             <Route
               path="/"
               element={<Navigate to={paths.index} />}
             />
 
-            {/* 비로그인 사용자 전용 라우트 */}
-            <Route element={<AuthenticateLayout />}>
-              {generateRoute(authenticateRoutes)}
+            {/* 통합된 스마트 라우트 (권한에 따라 자동 제어) */}
+            <Route element={<SmartLayout />}>
+              {generateRoute(unifiedRoutes)}
             </Route>
 
-            {/* 로그인 필요 라우트 */}
-            <Route element={<ProtectedLayout />}>
-              {generateRoute(protectedRoutes)}
-            </Route>
-
-            {/* 기본 라이센스 라우트 (모든 활성 라이센스) */}
-            <Route
-              element={
-                <UnifiedProtectedLayout
-                  requiredRoles={[
-                    EUserRole.USER,
-                    EUserRole.MANAGER,
-                    EUserRole.ADMIN,
-                    EUserRole.SUPER_ADMIN,
-                  ]}
-                  requiredLicenseTypes={[
-                    ELicenseType.FREE,
-                    ELicenseType.BASIC,
-                    ELicenseType.PREMIUM,
-                    ELicenseType.ENTERPRISE,
-                  ]}
-                  requireBoth={true}
-                />
-              }
-            >
-              {generateRoute(licenseRoutes)}
-            </Route>
-
-            {/* 프리미엄 이상 라이센스 + 매니저 이상 권한 */}
-            <Route
-              element={
-                <UnifiedProtectedLayout
-                  requiredRoles={[
-                    EUserRole.MANAGER,
-                    EUserRole.ADMIN,
-                    EUserRole.SUPER_ADMIN,
-                  ]}
-                  requiredLicenseTypes={[
-                    ELicenseType.PREMIUM,
-                    ELicenseType.ENTERPRISE,
-                  ]}
-                  requireBoth={true}
-                />
-              }
-            >
-              {generateRoute(premiumRoutes)}
-            </Route>
-
-            {/* 관리자 권한 (라이센스 불문) */}
-            <Route
-              element={
-                <UnifiedProtectedLayout
-                  requiredRoles={[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]}
-                  requireBoth={false} // 권한만 체크
-                />
-              }
-            >
-              {generateRoute(adminRoutes)}
-            </Route>
-
-            {/* 공개 라우트 */}
-            {generateRoute(publicRoutes)}
-
-            {/* 기존 특별 라우트 */}
+            {/* 기존 특별 라우트 (하위 호환성) */}
             <Route
               path={'/cr'}
               element={<CryptoPage />}
