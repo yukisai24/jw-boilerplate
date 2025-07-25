@@ -33,4 +33,7 @@ export const paths = {
     index: '/api',
     detail: ':id',
   },
+  test: {
+    routing: '/test/routing',
+  },
 };

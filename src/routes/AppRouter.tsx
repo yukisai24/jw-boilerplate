@@ -15,7 +15,6 @@ import { generateRoute } from '@/utils/routes';
 import { CryptoPage } from './lazyLoadComponoents';
 import { unifiedRoutes } from './routes';
 import ScrollManager from './ScrollManager';
-import SmartLayout from './SmartLayout';
 
 const AppRoutes = () => {
   return (
@@ -29,10 +28,8 @@ const AppRoutes = () => {
               element={<Navigate to={paths.index} />}
             />
 
-            {/* 통합된 스마트 라우트 (권한에 따라 자동 제어) */}
-            <Route element={<SmartLayout />}>
-              {generateRoute(unifiedRoutes)}
-            </Route>
+            {/* 통합된 라우트 (권한에 따라 자동 제어) */}
+            {generateRoute(unifiedRoutes)}
 
             {/* 기존 특별 라우트 (하위 호환성) */}
             <Route

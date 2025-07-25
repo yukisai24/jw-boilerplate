@@ -1,5 +1,21 @@
 import HomePage from '@/components/HomePage';
 
+// 관리자 관련 페이지
+import AdminDashboardPage from '@/pages/admin/AdminDashboardPage';
+import EditInformationPage from '@/pages/auth/EditInformationPage';
+import FindIdPage from '@/pages/auth/FindIdPage';
+// 인증 관련 페이지
+import LoginPage from '@/pages/auth/LoginPage';
+import ResetPasswordPage from '@/pages/auth/ResetPasswordPage';
+import SignUpPage from '@/pages/auth/SignUpPage';
+import BillingPage from '@/pages/license/BillingPage';
+import HistoryPage from '@/pages/license/HistoryPage';
+// 라이센스 관련 페이지
+import LicenseDashboardPage from '@/pages/license/LicenseDashboardPage';
+import SubscriptionPage from '@/pages/license/SubscriptionPage';
+import UpgradePage from '@/pages/license/UpgradePage';
+import UsagePage from '@/pages/license/UsagePage';
+// 기본 페이지
 import PageNotFound from '@/pages/pageNotFound';
 import RoutingTestPage from '@/pages/test/RoutingTestPage';
 import UnauthorizedPage from '@/pages/unauthorized';
@@ -15,486 +31,201 @@ import {
 import GlobalLayout from './GlobalLayout';
 import { paths } from './paths';
 
+// 컴포넌트 매핑 객체
+const componentMap: Record<string, React.ReactElement> = {
+  // 인증 관련
+  [paths.auth.logIn]: <LoginPage />,
+  [paths.auth.signUp]: <SignUpPage />,
+  [paths.auth.findId]: <FindIdPage />,
+  [paths.auth.resetPassword]: <ResetPasswordPage />,
+  [paths.auth.editInformation]: <EditInformationPage />,
+
+  // 라이센스 관련
+  [paths.license.dashboard]: <LicenseDashboardPage />,
+  [paths.license.subscription]: <SubscriptionPage />,
+  [paths.license.billing]: <BillingPage />,
+  [paths.license.usage]: <UsagePage />,
+  [paths.license.upgrade]: <UpgradePage />,
+  [paths.license.history]: <HistoryPage />,
+  [paths.license.features]: <div>기능 비교 페이지</div>, // 추후 구현
+  [paths.license.management]: <div>라이센스 관리 (프리미엄)</div>, // 추후 구현
+
+  // 관리자 관련
+  [paths.admin.dashboard]: <AdminDashboardPage />,
+  [paths.admin.users]: <div>사용자 관리 페이지</div>, // 추후 구현
+  [paths.admin.licenses]: <div>라이센스 관리 페이지</div>, // 추후 구현
+  [paths.admin.settings]: <div>시스템 설정 페이지</div>, // 추후 구현
+  [paths.admin.analytics]: <div>분석 대시보드 페이지</div>, // 추후 구현
+};
+
+// ✅ 라우트 생성 헬퍼 함수들
+const createBasicRoute = (
+  path: string,
+  title: string,
+  category: RouteItem['category'] = 'public',
+): RouteItem => ({
+  path,
+  element: <GlobalLayout />,
+  category,
+  title,
+  child: [
+    {
+      path: '',
+      element: componentMap[path] || <div>{title}</div>,
+    },
+  ],
+});
+
+const createProtectedRoute = (
+  path: string,
+  title: string,
+  options: {
+    category?: RouteItem['category'];
+    requiredRoles?: EUserRole[];
+    requiredLicenses?: ELicenseType[];
+    requiredFeatures?: string[];
+    requireBoth?: boolean;
+    requireAuth?: boolean;
+  } = {},
+): RouteItem => ({
+  path,
+  element: <GlobalLayout />,
+  requireAuth: options.requireAuth ?? true,
+  requiredRoles: options.requiredRoles,
+  requiredLicenses: options.requiredLicenses,
+  requiredFeatures: options.requiredFeatures,
+  requireBoth: options.requireBoth,
+  category: options.category ?? 'dashboard',
+  title,
+  child: [
+    {
+      path: '',
+      element: componentMap[path] || <div>{title}</div>,
+    },
+  ],
+});
+
+// 공통 권한 그룹 상수
+const ALL_USER_ROLES = [
+  EUserRole.USER,
+  EUserRole.MANAGER,
+  EUserRole.ADMIN,
+  EUserRole.SUPER_ADMIN,
+];
+
+const MANAGER_AND_ABOVE = [
+  EUserRole.MANAGER,
+  EUserRole.ADMIN,
+  EUserRole.SUPER_ADMIN,
+];
+
+const ADMIN_ONLY = [EUserRole.ADMIN, EUserRole.SUPER_ADMIN];
+
+const SUPER_ADMIN_ONLY = [EUserRole.SUPER_ADMIN];
+
+const ALL_LICENSE_TYPES = [
+  ELicenseType.FREE,
+  ELicenseType.BASIC,
+  ELicenseType.PREMIUM,
+  ELicenseType.ENTERPRISE,
+];
+
+const PREMIUM_AND_ABOVE = [ELicenseType.PREMIUM, ELicenseType.ENTERPRISE];
+
 // ✅ 통합된 라우트 설정 (메타데이터 포함)
 export const unifiedRoutes: RouteItem[] = [
   // === 인증 관련 라우트 ===
-  {
-    path: paths.auth.logIn,
-    element: <GlobalLayout />,
-    category: 'auth',
-    title: '로그인',
-    child: [
-      {
-        path: '',
-        element: <div>로그인</div>,
-        // element: <LogIn />,
-      },
-    ],
-  },
-  {
-    path: paths.auth.signUp,
-    element: <GlobalLayout />,
-    category: 'auth',
-    title: '회원가입',
-    child: [
-      {
-        path: '',
-        element: <div>회원가입</div>,
-        // element: <SignUp />,
-      },
-    ],
-  },
-  {
-    path: paths.auth.findId,
-    element: <GlobalLayout />,
-    category: 'auth',
-    title: '아이디 찾기',
-    child: [
-      {
-        path: '',
-        element: <div>아이디 찾기</div>,
-        // element: <FindIdPage />,
-      },
-    ],
-  },
-  {
-    path: paths.auth.resetPassword,
-    element: <GlobalLayout />,
-    category: 'auth',
-    title: '비밀번호 찾기',
-    child: [
-      {
-        path: '',
-        element: <div>비밀번호 찾기</div>,
-        // element: <ResetPasswordPage />,
-      },
-    ],
-  },
+  createBasicRoute(paths.auth.logIn, '로그인', 'auth'),
+  createBasicRoute(paths.auth.signUp, '회원가입', 'auth'),
+  createBasicRoute(paths.auth.findId, '아이디 찾기', 'auth'),
+  createBasicRoute(paths.auth.resetPassword, '비밀번호 찾기', 'auth'),
 
   // === 인증 필요 라우트 ===
-  {
-    path: paths.auth.editInformation,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
+  createProtectedRoute(paths.auth.editInformation, '회원정보 수정', {
     category: 'dashboard',
-    title: '회원정보 수정',
-    child: [
-      {
-        path: '',
-        element: <div>회원정보 수정</div>,
-        // element: <EditYourInformation />,
-      },
-    ],
-  },
+    requiredRoles: ALL_USER_ROLES,
+  }),
 
   // === 기본 라이센스 라우트 ===
-  {
-    path: paths.license.dashboard,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
-    requiredLicenses: [
-      ELicenseType.FREE,
-      ELicenseType.BASIC,
-      ELicenseType.PREMIUM,
-      ELicenseType.ENTERPRISE,
-    ],
+  createProtectedRoute(paths.license.dashboard, '라이센스 대시보드', {
     category: 'license',
-    title: '라이센스 대시보드',
-    child: [
-      {
-        path: '',
-        element: <div>라이센스 대시보드</div>,
-        // element: <LicenseDashboard />,
-      },
-    ],
-  },
-  {
-    path: paths.license.subscription,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
-    requiredLicenses: [
-      ELicenseType.FREE,
-      ELicenseType.BASIC,
-      ELicenseType.PREMIUM,
-      ELicenseType.ENTERPRISE,
-    ],
+    requiredRoles: ALL_USER_ROLES,
+    requiredLicenses: ALL_LICENSE_TYPES,
+  }),
+  createProtectedRoute(paths.license.subscription, '구독 관리', {
     category: 'license',
-    title: '구독 관리',
-    child: [
-      {
-        path: '',
-        element: <div>구독 관리</div>,
-        // element: <LicenseSubscription />,
-      },
-    ],
-  },
-  {
-    path: paths.license.billing,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
-    requiredLicenses: [
-      ELicenseType.FREE,
-      ELicenseType.BASIC,
-      ELicenseType.PREMIUM,
-      ELicenseType.ENTERPRISE,
-    ],
+    requiredRoles: ALL_USER_ROLES,
+    requiredLicenses: ALL_LICENSE_TYPES,
+  }),
+  createProtectedRoute(paths.license.billing, '결제 관리', {
     category: 'license',
-    title: '결제 관리',
-    child: [
-      {
-        path: '',
-        element: <div>결제 관리</div>,
-        // element: <LicenseBilling />,
-      },
-    ],
-  },
-  {
-    path: paths.license.usage,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
-    requiredLicenses: [
-      ELicenseType.FREE,
-      ELicenseType.BASIC,
-      ELicenseType.PREMIUM,
-      ELicenseType.ENTERPRISE,
-    ],
+    requiredRoles: ALL_USER_ROLES,
+    requiredLicenses: ALL_LICENSE_TYPES,
+  }),
+  createProtectedRoute(paths.license.usage, '사용량 조회', {
     category: 'license',
-    title: '사용량 조회',
-    child: [
-      {
-        path: '',
-        element: <div>사용량 조회</div>,
-        // element: <LicenseUsage />,
-      },
-    ],
-  },
-  {
-    path: paths.license.upgrade,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
-    requiredLicenses: [
-      ELicenseType.FREE,
-      ELicenseType.BASIC,
-      ELicenseType.PREMIUM,
-      ELicenseType.ENTERPRISE,
-    ],
+    requiredRoles: ALL_USER_ROLES,
+    requiredLicenses: ALL_LICENSE_TYPES,
+  }),
+  createProtectedRoute(paths.license.upgrade, '라이센스 업그레이드', {
     category: 'license',
-    title: '라이센스 업그레이드',
-    child: [
-      {
-        path: '',
-        element: <div>라이센스 업그레이드</div>,
-        // element: <LicenseUpgrade />,
-      },
-    ],
-  },
-  {
-    path: paths.license.history,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
-    requiredLicenses: [
-      ELicenseType.FREE,
-      ELicenseType.BASIC,
-      ELicenseType.PREMIUM,
-      ELicenseType.ENTERPRISE,
-    ],
+    requiredRoles: ALL_USER_ROLES,
+    requiredLicenses: ALL_LICENSE_TYPES,
+  }),
+  createProtectedRoute(paths.license.history, '라이센스 이력', {
     category: 'license',
-    title: '라이센스 이력',
-    child: [
-      {
-        path: '',
-        element: <div>라이센스 이력</div>,
-        // element: <LicenseHistory />,
-      },
-    ],
-  },
-  {
-    path: paths.license.features,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.USER,
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [
-      EUserRole.USER,
-      EUserRole.MANAGER,
-      EUserRole.ADMIN,
-      EUserRole.SUPER_ADMIN,
-    ],
-    requiredLicenses: [
-      ELicenseType.FREE,
-      ELicenseType.BASIC,
-      ELicenseType.PREMIUM,
-      ELicenseType.ENTERPRISE,
-    ],
+    requiredRoles: ALL_USER_ROLES,
+    requiredLicenses: ALL_LICENSE_TYPES,
+  }),
+  createProtectedRoute(paths.license.features, '기능 비교', {
     category: 'license',
-    title: '기능 비교',
-    child: [
-      {
-        path: '',
-        element: <div>기능 비교</div>,
-        // element: <LicenseFeatures />,
-      },
-    ],
-  },
+    requiredRoles: ALL_USER_ROLES,
+    requiredLicenses: ALL_LICENSE_TYPES,
+  }),
 
   // === 프리미엄 라우트 (PREMIUM 이상 + 매니저 이상) ===
-  {
-    path: paths.license.management,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[
-          EUserRole.MANAGER,
-          EUserRole.ADMIN,
-          EUserRole.SUPER_ADMIN,
-        ]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [EUserRole.MANAGER, EUserRole.ADMIN, EUserRole.SUPER_ADMIN],
-    requiredLicenses: [ELicenseType.PREMIUM, ELicenseType.ENTERPRISE],
-    requireBoth: true,
+  createProtectedRoute(paths.license.management, '라이센스 관리 (프리미엄)', {
     category: 'license',
-    title: '라이센스 관리 (프리미엄)',
-    child: [
-      {
-        path: '',
-        element: <div>라이센스 관리 (프리미엄)</div>,
-        // element: <LicenseManagement />,
-      },
-    ],
-  },
+    requiredRoles: MANAGER_AND_ABOVE,
+    requiredLicenses: PREMIUM_AND_ABOVE,
+    requireBoth: true,
+  }),
 
   // === 관리자 전용 라우트 ===
-  {
-    path: paths.admin.dashboard,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [EUserRole.ADMIN, EUserRole.SUPER_ADMIN],
+  createProtectedRoute(paths.admin.dashboard, '관리자 대시보드', {
     category: 'admin',
-    title: '관리자 대시보드',
-    child: [
-      {
-        path: '',
-        element: <div>관리자 대시보드</div>,
-        // element: <AdminDashboard />,
-      },
-    ],
-  },
-  {
-    path: paths.admin.users,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [EUserRole.ADMIN, EUserRole.SUPER_ADMIN],
+    requiredRoles: ADMIN_ONLY,
+  }),
+  createProtectedRoute(paths.admin.users, '사용자 관리', {
     category: 'admin',
-    title: '사용자 관리',
-    child: [
-      {
-        path: '',
-        element: <div>사용자 관리</div>,
-        // element: <AdminUsers />,
-      },
-    ],
-  },
-  {
-    path: paths.admin.licenses,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [EUserRole.ADMIN, EUserRole.SUPER_ADMIN],
+    requiredRoles: ADMIN_ONLY,
+  }),
+  createProtectedRoute(paths.admin.licenses, '라이센스 관리', {
     category: 'admin',
-    title: '라이센스 관리',
-    child: [
-      {
-        path: '',
-        element: <div>라이센스 관리</div>,
-        // element: <AdminLicenses />,
-      },
-    ],
-  },
-  {
-    path: paths.admin.settings,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[EUserRole.SUPER_ADMIN]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [EUserRole.SUPER_ADMIN],
+    requiredRoles: ADMIN_ONLY,
+  }),
+  createProtectedRoute(paths.admin.settings, '시스템 설정', {
     category: 'admin',
-    title: '시스템 설정',
-    child: [
-      {
-        path: '',
-        element: <div>시스템 설정</div>,
-        // element: <AdminSettings />,
-      },
-    ],
-  },
-  {
-    path: paths.admin.analytics,
-    element: (
-      <GlobalLayout
-        requireAuth={true}
-        acceptedRole={[EUserRole.ADMIN, EUserRole.SUPER_ADMIN]}
-      />
-    ),
-    requireAuth: true,
-    requiredRoles: [EUserRole.ADMIN, EUserRole.SUPER_ADMIN],
+    requiredRoles: SUPER_ADMIN_ONLY,
+  }),
+  createProtectedRoute(paths.admin.analytics, '분석 대시보드', {
     category: 'admin',
-    title: '분석 대시보드',
-    child: [
-      {
-        path: '',
-        element: <div>분석 대시보드</div>,
-        // element: <AdminAnalytics />,
-      },
-    ],
-  },
+    requiredRoles: ADMIN_ONLY,
+  }),
 
   // === 공개 라우트 ===
-  {
-    path: '/test/routing',
-    element: <RoutingTestPage />,
-    category: 'public',
-    title: '라우팅 테스트',
-    description: '권한 및 라이센스 기능 테스트',
-  },
+  // 개발환경에서만 접속 가능한 테스트 라우트
+  ...(process.env.NODE_ENV === 'development'
+    ? [
+        {
+          path: paths.test.routing,
+          element: <RoutingTestPage />,
+          category: 'public' as const,
+          title: '라우팅 테스트 (개발용)',
+          description: '권한 및 라이센스 기능 테스트 - 개발환경 전용',
+        },
+      ]
+    : []),
   {
     path: '/unauthorized',
     element: <UnauthorizedPage />,
@@ -507,10 +238,24 @@ export const unifiedRoutes: RouteItem[] = [
     category: 'public',
     title: '페이지 없음',
   },
+
+  // === 홈 라우트 ===
   {
     path: paths.index,
     element: <GlobalLayout />,
-    category: 'public',
+    category: 'dashboard',
+    title: '홈',
+    child: [
+      {
+        path: '',
+        element: <HomePage />,
+      },
+    ],
+  },
+  {
+    path: paths.home,
+    element: <GlobalLayout />,
+    category: 'dashboard',
     title: '홈',
     child: [
       {

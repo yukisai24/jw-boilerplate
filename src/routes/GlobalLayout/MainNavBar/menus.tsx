@@ -17,6 +17,17 @@ export const menus: TMenu[] = [
       },
     ],
   },
+  // 개발환경에서만 표시되는 테스트 메뉴
+  ...(process.env.NODE_ENV === 'development'
+    ? [
+        {
+          label: '라우팅 테스트',
+          id: 'test-routing',
+          path: paths.test.routing,
+          acceptedRole: [EUserRole.GUEST, EUserRole.ADMIN],
+        },
+      ]
+    : []),
 ];
 
 export const getUserMenuList = (isAuthenticated: boolean): TMenu[] => {
